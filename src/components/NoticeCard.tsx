@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 
 interface NoticeCardProps {
   notice: Notice;
-  onDelete?: (id: string) => void;
 }
 
 const categoryColors: Record<Notice['category'], { bg: string; border: string; text: string }> = {
@@ -15,7 +14,7 @@ const categoryColors: Record<Notice['category'], { bg: string; border: string; t
   'Health & Safety': { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.4)', text: '#f59e0b' },
 };
 
-export default function NoticeCard({ notice, onDelete }: NoticeCardProps) {
+export default function NoticeCard({ notice }: NoticeCardProps) {
   const colors = categoryColors[notice.category];
   
   const formatTimeAgo = (date: Date) => {
@@ -47,19 +46,7 @@ export default function NoticeCard({ notice, onDelete }: NoticeCardProps) {
             {notice.message}
           </p>
         </div>
-        {onDelete && (
-          <button
-            onClick={() => onDelete(notice.id)}
-            className="ml-4 px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105 active:scale-95"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.2)',
-              color: '#ef4444',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-            }}
-          >
-            Delete
-          </button>
-        )}
+
       </div>
       
       <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
@@ -77,7 +64,7 @@ export default function NoticeCard({ notice, onDelete }: NoticeCardProps) {
         
         <div className="flex items-center gap-2">
           <span 
-            className="px-3 py-1 rounded-full text-sm font-medium"
+            className="px-3 py-1 rounded text-sm font-medium"
             style={{
               backgroundColor: colors.bg,
               color: colors.text,
