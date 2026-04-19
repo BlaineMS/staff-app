@@ -355,23 +355,7 @@ export default function Home() {
           </div>
 
           {/* Bottom nav (mobile) */}
-          <nav
-            className="app-bottom-nav"
-            style={{
-              position: "fixed",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 56,
-              background: "var(--surface-1)",
-              borderTop: "1px solid var(--border)",
-              display: "none",
-              alignItems: "stretch",
-              justifyContent: "space-around",
-              zIndex: 40,
-              paddingBottom: "env(safe-area-inset-bottom, 0)",
-            }}
-          >
+          <nav className="app-bottom-nav">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.id;
