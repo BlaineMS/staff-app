@@ -63,3 +63,13 @@ button, input, select, textarea {
   background: rgba(94, 106, 210, 0.35);
   color: #fff;
 }
+
+/* Mobile nav: sidebar becomes bottom bar */
+.app-bottom-nav { display: none; }
+
+@media (max-width: 768px) {
+  .app-sidebar { display: none !important; }
+  .app-bottom-nav { display: flex !important; }
+  .app-main { padding-bottom: 56px; }
+  .app-topbar-search { display: none !important; }
+}
