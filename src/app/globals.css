@@ -1,70 +1,65 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f0d14;
-  --foreground: #ffffff;
+  --bg: #08090b;
+  --surface-0: #0e0f12;
+  --surface-1: #131418;
+  --surface-2: #181a1f;
+  --surface-hover: #1e2026;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.10);
+  --text: #ececee;
+  --text-muted: #9ca0a8;
+  --text-dim: #62656e;
+  --text-faint: #42454d;
+  --accent: #5e6ad2;
+  --accent-bright: #8d95e0;
+  --accent-soft: rgba(94, 106, 210, 0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  
-  --radius-lg: 1rem;
-  --radius-md: 0.75rem;
-  --radius-sm: 0.5rem;
-  
-  --color-primary: #8b5cf6;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #10b981;
-  --color-secondary-foreground: #ffffff;
-  --color-accent: #f59e0b;
-  --color-accent-foreground: #ffffff;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #ffffff;
-  --color-muted: rgba(255, 255, 255, 0.1);
-  --color-muted-foreground: rgba(255, 255, 255, 0.6);
-  --color-card: rgba(255, 255, 255, 0.05);
-  --color-card-border: rgba(255, 255, 255, 0.1);
+* {
+  box-sizing: border-box;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+html, body {
   margin: 0;
-  min-height: 100vh;
-  overflow-x: hidden;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  height: 100%;
+  letter-spacing: -0.005em;
 }
 
-/* Custom scrollbar */
+button, input, select, textarea {
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
-/* Selection */
 ::selection {
-  background-color: rgba(139, 92, 246, 0.3);
-  color: white;
-}
-
-/* Smooth transitions */
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  background: rgba(94, 106, 210, 0.35);
+  color: #fff;
 }
