@@ -33,6 +33,18 @@ const CATEGORY_COLORS: Record<TaskCategory, string> = {
   Personal: "#a855f7",
 };
 
+const STAFF_COLORS: Record<string, string> = {
+  Tracy: "#8b5cf6",
+  Sacha: "#ef4444",
+  Kylie: "#f59e0b",
+  Ella: "#22c55e",
+  Nick: "#3b82f6",
+  Tom: "#ec4899",
+  Becca: "#a855f7",
+  Kim: "#14b8a6",
+  Col: "#f97316",
+};
+
 const generalTasks: Task[] = [
   { id: "1", name: "Open up and disable alarm", category: "Opening", completed: false },
   { id: "2", name: "Check cellar temperature", category: "Cellar", completed: false },
@@ -164,6 +176,7 @@ export default function Tasks() {
 
 function TaskRow({ task, onToggle }: { task: Task; onToggle: (id: string) => void }) {
   const color = CATEGORY_COLORS[task.category];
+  const staffColor = task.assignedTo ? STAFF_COLORS[task.assignedTo] || "#9ca3af" : null;
   return (
     <PillCard color={color} style={{ padding: "10px 14px", opacity: task.completed ? 0.6 : 1 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -179,13 +192,11 @@ function TaskRow({ task, onToggle }: { task: Task; onToggle: (id: string) => voi
           >
             {task.name}
           </PillText>
-          {task.assignedTo && (
-            <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>
-              Assigned to {task.assignedTo}
-            </div>
-          )}
         </div>
-        <Tag label={task.category} color={color} />
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {staffColor && <Tag label={task.assignedTo} color={staffColor} />}
+          <Tag label={task.category} color={color} />
+        </div>
       </div>
     </PillCard>
   );
