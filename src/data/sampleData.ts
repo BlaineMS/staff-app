@@ -1,17 +1,6 @@
 import { Notice, StaffMember, NoticeCategory, PersonalMessage, StaffNote } from '@/types/notice';
 
-export const staffMembers: StaffMember[] = [
-  { id: '1', name: 'Tracy' },
-  { id: '2', name: 'Sacha' },
-  { id: '3', name: 'Kylie' },
-  { id: '4', name: 'Ella' },
-  { id: '5', name: 'Nick' },
-  { id: '6', name: 'Tom' },
-  { id: '7', name: 'Becca' },
-  { id: '8', name: 'Kim' },
-  { id: '9', name: 'Col' },
-  { id: '10', name: 'Blaine' },
-];
+export const staffMembers: StaffMember[] = [];
 
 export const sampleNotices: Notice[] = [
   {

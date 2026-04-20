@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { sampleNotices, categories, samplePersonalMessages, staffMembers } from "@/data/sampleData";
+import { useState, useEffect } from "react";
+import { sampleNotices, categories, samplePersonalMessages, staffMembers as sampleStaffMembers } from "@/data/sampleData";
 import { Notice, NoticeCategory, PersonalMessage } from "@/types/notice";
 import {
   PageHeader,
@@ -18,6 +18,13 @@ import {
   Tag,
   CheckIcon,
 } from "./ui";
+
+interface StaffMember {
+  id: string;
+  name: string;
+  role: string;
+  color: string;
+}
 
 const CATEGORY_COLORS: Record<NoticeCategory, string> = {
   Urgent: "#ef4444",
@@ -43,12 +50,38 @@ export default function NoticeBoardPage() {
   const [personalMessages, setPersonalMessages] = useState<PersonalMessage[]>(samplePersonalMessages);
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<string | null>(null);
+  const [liveStaff, setLiveStaff] = useState<StaffMember[]>([]);
   const [newNotice, setNewNotice] = useState({
     title: "",
     message: "",
     category: "General" as NoticeCategory,
-    postedBy: "Blaine",
+    postedBy: "Blaine M-S",
   });
+
+  useEffect(() => {
+    // Fetch live staff from Square
+    fetch('/api/staff')
+      .then(r => r.json())
+      .then(d => setLiveStaff(d.staff || []))
+      .catch(() => {});
+
+    // Fetch notices from Mission Control API
+    fetch('http://localhost:3000/api/staff-board/notices')
+      .then(r => r.json())
+      .then(d => {
+        if (d.notices && d.notices.length > 0) {
+          setNotices(d.notices.map((n: {id:string;title:string;body?:string;message?:string;category?:NoticeCategory;author?:string;postedBy?:string;createdAt:string}) => ({
+            id: n.id,
+            title: n.title,
+            message: n.body || n.message || '',
+            category: (n.category || 'General') as NoticeCategory,
+            postedBy: n.author || n.postedBy || 'Manager',
+            postedAt: new Date(n.createdAt || Date.now()),
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const filteredNotices =
     selectedCategory === "All" ? notices : notices.filter((n) => n.category === selectedCategory);
@@ -64,7 +97,13 @@ export default function NoticeBoardPage() {
       postedAt: new Date(),
     };
     setNotices((prev) => [n, ...prev]);
-    setNewNotice({ title: "", message: "", category: "General", postedBy: "Blaine" });
+    // Persist to Mission Control API (field mapping: body=message, author=postedBy)
+    fetch('http://localhost:3000/api/staff-board/notices', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: n.title, body: n.message, author: n.postedBy, audience: 'all' }),
+    }).catch(() => {});
+    setNewNotice({ title: "", message: "", category: "General", postedBy: "Blaine M-S" });
     setShowNoticeForm(false);
   };
 
@@ -187,7 +226,7 @@ export default function NoticeBoardPage() {
                         }
                         style={{ width: "100%" }}
                       >
-                        {staffMembers.map((s) => (
+                        {liveStaff.map((s) => (
                           <option key={s.id} value={s.name}>
                             {s.name}
                           </option>
@@ -265,8 +304,8 @@ export default function NoticeBoardPage() {
             <div style={{ marginBottom: 16 }}>
               <SectionHeading dotColor="var(--accent)" title="Select your name" />
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {staffMembers
-                  .filter((s) => s.name !== "Blaine")
+                {liveStaff
+                  .filter((s) => s.name !== "Blaine Morris-Smith")
                   .map((s) => (
                     <GhostButton
                       key={s.id}

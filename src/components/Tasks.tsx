@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { staffMembers as sampleStaffMembers } from "@/data/sampleData";
 import {
   PageHeader,
@@ -12,6 +12,13 @@ import {
   EmptyState,
   Checkbox,
 } from "./ui";
+
+interface StaffMember {
+  id: string;
+  name: string;
+  role: string;
+  color: string;
+}
 
 export type TaskCategory = "Opening" | "Closing" | "Cellar" | "Kitchen" | "Bar" | "General" | "Personal";
 
@@ -33,17 +40,7 @@ const CATEGORY_COLORS: Record<TaskCategory, string> = {
   Personal: "#a855f7",
 };
 
-const STAFF_COLORS: Record<string, string> = {
-  Tracy: "#8b5cf6",
-  Sacha: "#ef4444",
-  Kylie: "#f59e0b",
-  Ella: "#22c55e",
-  Nick: "#3b82f6",
-  Tom: "#ec4899",
-  Becca: "#a855f7",
-  Kim: "#14b8a6",
-  Col: "#f97316",
-};
+// STAFF_COLORS will be replaced with live staff data
 
 const generalTasks: Task[] = [
   { id: "1", name: "Open up and disable alarm", category: "Opening", completed: false },
@@ -72,14 +69,61 @@ const personalTasks: Task[] = [
   { id: "p11", name: "Check outdoor furniture condition", category: "Personal", completed: false, assignedTo: "Col" },
 ];
 
-const staffList = ["All", ...sampleStaffMembers.map((m) => m.name)];
-
 export default function Tasks() {
   const [selectedStaff, setSelectedStaff] = useState<string>("All");
   const [tasks, setTasks] = useState<Task[]>([...generalTasks, ...personalTasks]);
+  const [liveStaff, setLiveStaff] = useState<StaffMember[]>([]);
 
-  const handleToggle = (id: string) =>
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+  useEffect(() => {
+    // Fetch live staff from Square
+    fetch('/api/staff')
+      .then(r => r.json())
+      .then(d => setLiveStaff(d.staff || []))
+      .catch(() => {});
+
+    // Fetch persisted tasks from Mission Control API
+    fetch('http://localhost:3000/api/staff-board/staff-tasks')
+      .then(r => r.json())
+      .then(d => {
+        if (d.tasks && d.tasks.length > 0) {
+          // Merge API tasks with local defaults (API takes precedence by id)
+          setTasks(prev => {
+            const apiIds = new Set(d.tasks.map((t: Task) => t.id));
+            const localOnly = prev.filter(t => !apiIds.has(t.id));
+            return [...d.tasks, ...localOnly];
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const getStaffColor = (name: string) => {
+    return liveStaff.find(s => s.name === name)?.color ?? "#9ca3af";
+  };
+
+  const staffList = ["All", ...liveStaff.map(s => s.name)];
+
+  const handleToggle = (id: string) => {
+    setTasks((prev) => {
+      const updated = prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t));
+      const task = updated.find(t => t.id === id);
+      if (task) {
+        // Map local task format to MC API format
+        fetch('http://localhost:3000/api/staff-board/staff-tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: task.name,
+            description: task.category,
+            assignee: task.assignedTo || 'general',
+            status: task.completed ? 'done' : 'todo',
+            priority: 'medium',
+          }),
+        }).catch(() => {});
+      }
+      return updated;
+    });
+  };
 
   const filtered = tasks.filter((t) =>
     selectedStaff === "All" ? !t.assignedTo : !t.assignedTo || t.assignedTo === selectedStaff,
@@ -173,32 +217,32 @@ export default function Tasks() {
       </div>
     </div>
   );
-}
 
-function TaskRow({ task, onToggle }: { task: Task; onToggle: (id: string) => void }) {
-  const color = CATEGORY_COLORS[task.category];
-  const staffColor = task.assignedTo ? STAFF_COLORS[task.assignedTo] || "#9ca3af" : null;
-  return (
-    <PillCard color={color} style={{ padding: "10px 14px", opacity: task.completed ? 0.6 : 1 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <Checkbox checked={task.completed} onClick={() => onToggle(task.id)} color={color} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <PillText
-            style={{
-              fontSize: 13,
-              fontWeight: 500,
-              textDecoration: task.completed ? "line-through" : "none",
-              color: task.completed ? "var(--text-muted)" : "var(--text)",
-            }}
-          >
-            {task.name}
-          </PillText>
+  function TaskRow({ task, onToggle }: { task: Task; onToggle: (id: string) => void }) {
+    const color = CATEGORY_COLORS[task.category];
+    const staffColor = task.assignedTo ? getStaffColor(task.assignedTo) : null;
+    return (
+      <PillCard color={color} style={{ padding: "10px 14px", opacity: task.completed ? 0.6 : 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Checkbox checked={task.completed} onClick={() => onToggle(task.id)} color={color} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <PillText
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                textDecoration: task.completed ? "line-through" : "none",
+                color: task.completed ? "var(--text-muted)" : "var(--text)",
+              }}
+            >
+              {task.name}
+            </PillText>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            {staffColor && task.assignedTo && <Tag label={task.assignedTo} color={staffColor} />}
+            <Tag label={task.category} color={color} />
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          {staffColor && task.assignedTo && <Tag label={task.assignedTo} color={staffColor} />}
-          <Tag label={task.category} color={color} />
-        </div>
-      </div>
-    </PillCard>
-  );
+      </PillCard>
+    );
+  }
 }

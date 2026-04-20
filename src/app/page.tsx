@@ -24,7 +24,7 @@ const NAV_ITEMS: { id: NavId; label: string; icon: () => React.ReactElement; soo
   { id: "tasks", label: "Tasks", icon: TasksIcon },
   { id: "stock", label: "Stock", icon: StockIcon },
   { id: "events", label: "Events", icon: EventsIcon },
-  { id: "rota", label: "Rota", icon: RotaIcon, soon: true },
+  { id: "rota", label: "Rota", icon: RotaIcon },
 ];
 
 export default function Home() {
@@ -42,17 +42,22 @@ export default function Home() {
         return <Events />;
       case "rota":
         return (
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--text-dim)",
-              fontSize: 13,
-            }}
-          >
-            Rota — coming soon
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--border)", background: "var(--surface-1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>Staff Rota</div>
+                <div style={{ fontSize: 12, color: "var(--text-dim)", marginTop: 2 }}>View and manage shifts in Mission Control</div>
+              </div>
+              <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: 12.5, fontWeight: 500, color: "#fff", background: "var(--accent)", border: "1px solid var(--accent)", borderRadius: 6, padding: "6px 14px", cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                Open in Mission Control →
+              </a>
+            </div>
+            <iframe
+              src="http://localhost:3000"
+              style={{ flex: 1, border: "none", width: "100%", minHeight: 0 }}
+              title="Mission Control Rota"
+            />
           </div>
         );
       default:
@@ -207,7 +212,7 @@ export default function Home() {
             return (
               <button
                 key={item.id}
-                onClick={() => !item.soon && setActive(item.id)}
+                onClick={() => { if (!item.soon) setActive(item.id); }}
                 disabled={item.soon}
                 className={`app-top-nav-item${isActive ? " active" : ""}`}
               >
@@ -252,7 +257,7 @@ export default function Home() {
               return (
                 <div
                   key={item.id}
-                  onClick={() => !item.soon && setActive(item.id)}
+                  onClick={() => { if (!item.soon) setActive(item.id); }}
                   style={{
                     display: "flex",
                     alignItems: "center",
