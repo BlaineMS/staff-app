@@ -199,6 +199,25 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Mobile top tabs */}
+        <nav className="app-top-nav">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = active === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => !item.soon && setActive(item.id)}
+                disabled={item.soon}
+                className={`app-top-nav-item${isActive ? " active" : ""}`}
+              >
+                <Icon />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
         {/* Body */}
         <div style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
           {/* Sidebar (desktop) */}
@@ -357,46 +376,6 @@ export default function Home() {
           >
             {renderPage()}
           </div>
-
-          {/* Bottom nav (mobile) */}
-          <nav className="app-bottom-nav">
-            {NAV_ITEMS.map((item) => {
-              const Icon = item.icon;
-              const isActive = active === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => !item.soon && setActive(item.id)}
-                  disabled={item.soon}
-                  style={{
-                    flex: 1,
-                    background: "transparent",
-                    border: "none",
-                    cursor: item.soon ? "not-allowed" : "pointer",
-                    color: isActive
-                      ? "var(--text)"
-                      : item.soon
-                      ? "var(--text-faint)"
-                      : "var(--text-muted)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 3,
-                    padding: "6px 4px",
-                    opacity: item.soon ? 0.55 : 1,
-                    borderTop: isActive ? "1.5px solid var(--accent)" : "1.5px solid transparent",
-                    transition: "color 120ms, border-color 120ms",
-                  }}
-                >
-                  <Icon />
-                  <span style={{ fontSize: 10.5, fontWeight: 500, letterSpacing: "-0.005em" }}>
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
         </div>
       </div>
     </div>

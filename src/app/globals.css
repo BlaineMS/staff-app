@@ -69,8 +69,8 @@ input, select, textarea {
   font-size: 16px;
 }
 
-/* Mobile nav: sidebar becomes bottom bar */
-.app-bottom-nav {
+/* Mobile top tabs replace the desktop sidebar */
+.app-top-nav {
   display: none;
 }
 
@@ -89,22 +89,49 @@ input, select, textarea {
   .app-shell {
     height: 100dvh !important;
   }
-  .app-bottom-nav {
+  .app-top-nav {
     display: flex;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 56px;
+    gap: 6px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
     background: var(--surface-1);
-    border-top: 1px solid var(--border);
-    align-items: stretch;
-    justify-content: space-around;
-    z-index: 40;
-    padding-bottom: env(safe-area-inset-bottom, 0);
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    scrollbar-width: none;
+  }
+  .app-top-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .app-top-nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 120ms, color 120ms, border-color 120ms;
+  }
+  .app-top-nav-item.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .app-top-nav-item:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
   }
   .app-main {
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0));
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
   .app-topbar-search {
     display: none !important;
