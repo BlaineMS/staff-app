@@ -150,6 +150,7 @@ export default function Events() {
 
       {/* Legend */}
       <div
+        className="scroll-row"
         style={{
           display: "flex",
           alignItems: "center",
@@ -212,7 +213,7 @@ export default function Events() {
                   placeholder="Event title"
                 />
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div className="row-stack" style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
                   <FieldLabel>Date</FieldLabel>
                   <Input
@@ -237,7 +238,7 @@ export default function Events() {
                   </Select>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div className="row-stack" style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
                   <FieldLabel>Start</FieldLabel>
                   <Input
@@ -257,7 +258,7 @@ export default function Events() {
                   />
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div className="row-stack" style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
                   <FieldLabel>Location</FieldLabel>
                   <Input
@@ -274,11 +275,12 @@ export default function Events() {
                     style={{ width: "100%" }}
                   />
                 </div>
-                <div style={{ width: 100 }}>
+                <div style={{ width: 120 }}>
                   <FieldLabel>Attendees</FieldLabel>
                   <Input
                     type="number"
                     min={0}
+                    inputMode="numeric"
                     value={newEvent.attendees}
                     onChange={(e) =>
                       setNewEvent((n) => ({ ...n, attendees: parseInt(e.target.value) || 0 }))
@@ -331,6 +333,7 @@ export default function Events() {
 
         {/* Calendar grid */}
         <div
+          className="calendar-grid"
           style={{
             background: "var(--surface-1)",
             border: "1px solid var(--border)",
@@ -416,6 +419,7 @@ export default function Events() {
                       return (
                         <div
                           key={ev.id}
+                          className="calendar-event"
                           title={`${ev.title} · ${ev.startTime}–${ev.endTime}`}
                           style={{
                             fontSize: 10.5,

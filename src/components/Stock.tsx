@@ -189,7 +189,7 @@ export default function Stock() {
                   style={{ width: "100%" }}
                 />
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div className="row-stack" style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
                   <FieldLabel>Type</FieldLabel>
                   <Select
@@ -217,7 +217,7 @@ export default function Stock() {
                   />
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div className="row-stack" style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
                   <FieldLabel>Supplier</FieldLabel>
                   <Input
@@ -266,6 +266,7 @@ export default function Stock() {
             return (
               <div key={cat}>
                 <div
+                  className="wrap-row"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -311,13 +312,14 @@ export default function Stock() {
                     return (
                       <PillCard key={item.id} color={color} style={{ padding: "12px 14px" }}>
                         <div
+                          className="stock-row"
                           style={{
                             display: "flex",
                             alignItems: "center",
                             gap: 14,
                           }}
                         >
-                          <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className="stock-body" style={{ flex: 1, minWidth: 0 }}>
                             <div
                               style={{
                                 display: "flex",
@@ -363,6 +365,7 @@ export default function Stock() {
                             </div>
                           </div>
                           <div
+                            className="stock-controls"
                             style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}
                           >
                             <IconButton onClick={() => decrement(item.id)} aria-label="decrement">
@@ -371,10 +374,11 @@ export default function Stock() {
                             <input
                               type="number"
                               min={0}
+                              inputMode="numeric"
                               value={item.currentStock}
                               onChange={(e) => setStock(item.id, e.target.value)}
                               style={{
-                                width: 52,
+                                width: 56,
                                 textAlign: "center",
                                 background: "var(--surface-2)",
                                 border: "1px solid var(--border)",
@@ -416,10 +420,11 @@ function IconButton({
   return (
     <button
       onClick={onClick}
+      className="tap-target"
       {...rest}
       style={{
-        width: 26,
-        height: 26,
+        width: 30,
+        height: 30,
         borderRadius: 6,
         background: "var(--surface-2)",
         border: "1px solid var(--border)",

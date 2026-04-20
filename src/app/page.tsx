@@ -71,6 +71,7 @@ export default function Home() {
       }}
     >
       <div
+        className="app-shell"
         style={{
           width: "100%",
           height: "100vh",
@@ -121,7 +122,10 @@ export default function Home() {
             >
               Staff App
             </span>
-            <span style={{ fontSize: 12, color: "var(--text-dim)", marginLeft: 2 }}>
+            <span
+              className="app-topbar-subtitle"
+              style={{ fontSize: 12, color: "var(--text-dim)", marginLeft: 2 }}
+            >
               · The Catherine Wheel
             </span>
           </div>

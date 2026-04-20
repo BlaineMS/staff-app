@@ -114,6 +114,7 @@ export default function Tasks() {
 
       {/* Staff filter */}
       <div
+        className="scroll-row"
         style={{
           display: "flex",
           alignItems: "center",
@@ -194,7 +195,7 @@ function TaskRow({ task, onToggle }: { task: Task; onToggle: (id: string) => voi
           </PillText>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          {staffColor && <Tag label={task.assignedTo} color={staffColor} />}
+          {staffColor && task.assignedTo && <Tag label={task.assignedTo} color={staffColor} />}
           <Tag label={task.category} color={color} />
         </div>
       </div>
