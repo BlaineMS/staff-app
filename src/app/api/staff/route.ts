@@ -12,7 +12,8 @@ export async function GET() {
   if (cache && Date.now() - cache.ts < TTL) return NextResponse.json(cache.data);
 
   try {
-    const token = process.env.SQUARE_ACCESS_TOKEN || "EAAAl1Yw9IHmy4yZX1AAZNSdzDiYEsxQg9POtpWznTxexUsoPcCF6SRkpK6njpFu";
+    const token = process.env.SQUARE_ACCESS_TOKEN;
+    if (!token) return NextResponse.json({ staff: [] });
     const res = await fetch("https://connect.squareup.com/v2/team-members/search", {
       method: "POST",
       headers: {

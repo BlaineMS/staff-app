@@ -48,13 +48,13 @@ export default function Home() {
                 <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>Staff Rota</div>
                 <div style={{ fontSize: 12, color: "var(--text-dim)", marginTop: 2 }}>View and manage shifts in Mission Control</div>
               </div>
-              <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer"
+              <a href={`${process.env.NEXT_PUBLIC_MC_URL}`} target="_blank" rel="noopener noreferrer"
                 style={{ fontSize: 12.5, fontWeight: 500, color: "#fff", background: "var(--accent)", border: "1px solid var(--accent)", borderRadius: 6, padding: "6px 14px", cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}>
                 Open in Mission Control →
               </a>
             </div>
             <iframe
-              src="http://localhost:3000"
+              src={`${process.env.NEXT_PUBLIC_MC_URL}`}
               style={{ flex: 1, border: "none", width: "100%", minHeight: 0 }}
               title="Mission Control Rota"
             />

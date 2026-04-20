@@ -66,7 +66,7 @@ export default function NoticeBoardPage() {
       .catch(() => {});
 
     // Fetch notices from Mission Control API
-    fetch('http://localhost:3000/api/staff-board/notices')
+    fetch(`${process.env.NEXT_PUBLIC_MC_URL}/api/staff-board/notices`)
       .then(r => r.json())
       .then(d => {
         if (d.notices && d.notices.length > 0) {
@@ -98,7 +98,7 @@ export default function NoticeBoardPage() {
     };
     setNotices((prev) => [n, ...prev]);
     // Persist to Mission Control API (field mapping: body=message, author=postedBy)
-    fetch('http://localhost:3000/api/staff-board/notices', {
+    fetch(`${process.env.NEXT_PUBLIC_MC_URL}/api/staff-board/notices`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: n.title, body: n.message, author: n.postedBy, audience: 'all' }),

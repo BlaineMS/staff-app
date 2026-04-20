@@ -81,17 +81,18 @@ export default function Tasks() {
       .then(d => setLiveStaff(d.staff || []))
       .catch(() => {});
 
-    // Fetch persisted tasks from Mission Control API
-    fetch('http://localhost:3000/api/staff-board/staff-tasks')
+    // Sync task completion states from MC API on load
+    fetch(`${process.env.NEXT_PUBLIC_MC_URL}/api/staff-board/staff-tasks`)
       .then(r => r.json())
       .then(d => {
         if (d.tasks && d.tasks.length > 0) {
-          // Merge API tasks with local defaults (API takes precedence by id)
-          setTasks(prev => {
-            const apiIds = new Set(d.tasks.map((t: Task) => t.id));
-            const localOnly = prev.filter(t => !apiIds.has(t.id));
-            return [...d.tasks, ...localOnly];
-          });
+          // Build lookup of id → completed from MC data (MC uses status:'done' not completed:bool)
+          const mcState = new Map();
+          for (const t of d.tasks) {
+            mcState.set(t.id, t.status === 'done');
+          }
+          // Apply MC completion state to local tasks
+          setTasks(prev => prev.map(t => mcState.has(t.id) ? { ...t, completed: mcState.get(t.id) } : t));
         }
       })
       .catch(() => {});
@@ -108,17 +109,20 @@ export default function Tasks() {
       const updated = prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t));
       const task = updated.find(t => t.id === id);
       if (task) {
-        // Map local task format to MC API format
-        fetch('http://localhost:3000/api/staff-board/staff-tasks', {
-          method: 'POST',
+        // PATCH existing task by id; if not found (404), create it via POST
+        const mcUrl = process.env.NEXT_PUBLIC_MC_URL;
+        fetch(`${mcUrl}/api/staff-board/staff-tasks`, {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: task.name,
-            description: task.category,
-            assignee: task.assignedTo || 'general',
-            status: task.completed ? 'done' : 'todo',
-            priority: 'medium',
-          }),
+          body: JSON.stringify({ id: task.id, status: task.completed ? 'done' : 'todo' }),
+        }).then(r => {
+          if (r.status === 404) {
+            return fetch(`${mcUrl}/api/staff-board/staff-tasks`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: task.id, title: task.name, description: task.category, assignee: task.assignedTo || 'general', status: task.completed ? 'done' : 'todo', priority: 'medium' }),
+            });
+          }
         }).catch(() => {});
       }
       return updated;

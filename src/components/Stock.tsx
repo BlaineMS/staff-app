@@ -148,7 +148,7 @@ export default function Stock() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3000/api/staff-board/shopping-list", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_MC_URL}/api/staff-board/shopping-list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: deficit }),
