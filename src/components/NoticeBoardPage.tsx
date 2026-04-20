@@ -90,6 +90,7 @@ export default function NoticeBoardPage() {
 
       {/* Mode tabs */}
       <div
+        className="scroll-row"
         style={{
           display: "flex",
           alignItems: "center",
@@ -155,7 +156,7 @@ export default function NoticeBoardPage() {
                       style={{ width: "100%", minHeight: 80 }}
                     />
                   </div>
-                  <div style={{ display: "flex", gap: 10 }}>
+                  <div className="row-stack" style={{ display: "flex", gap: 10 }}>
                     <div style={{ flex: 1 }}>
                       <FieldLabel>Category</FieldLabel>
                       <Select

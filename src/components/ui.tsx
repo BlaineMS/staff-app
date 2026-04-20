@@ -146,6 +146,7 @@ export function PageHeader({
 }) {
   return (
     <div
+      className="page-header"
       style={{
         padding: "14px 20px 13px",
         borderBottom: "1px solid var(--border)",
@@ -154,6 +155,7 @@ export function PageHeader({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        gap: 10,
       }}
     >
       <div>

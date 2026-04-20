@@ -64,14 +64,30 @@ button, input, select, textarea {
   color: #fff;
 }
 
+/* Prevent iOS from inflating input font-size when focused */
+input, select, textarea {
+  font-size: 16px;
+}
+
 /* Mobile nav: sidebar becomes bottom bar */
 .app-bottom-nav {
+  display: none;
+}
+
+/* Horizontal scroll row for filter chips on mobile */
+.scroll-row {
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar {
   display: none;
 }
 
 @media (max-width: 768px) {
   .app-sidebar {
     display: none !important;
+  }
+  .app-shell {
+    height: 100dvh !important;
   }
   .app-bottom-nav {
     display: flex;
@@ -92,5 +108,70 @@ button, input, select, textarea {
   }
   .app-topbar-search {
     display: none !important;
+  }
+  .app-topbar-subtitle {
+    display: none !important;
+  }
+
+  /* Horizontal scrolling chip rows */
+  .scroll-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-row > * {
+    flex-shrink: 0;
+  }
+
+  /* Stack form rows on mobile */
+  .row-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .row-stack > * {
+    width: 100% !important;
+  }
+
+  /* Stack stock item body and its +/- controls */
+  .stock-row {
+    flex-wrap: wrap;
+  }
+  .stock-row .stock-body {
+    flex: 1 1 100% !important;
+    min-width: 0;
+  }
+  .stock-row .stock-controls {
+    margin-top: 8px;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  /* Compact calendar cells on phones */
+  .calendar-grid button {
+    min-height: 58px !important;
+    padding: 4px !important;
+  }
+  .calendar-grid .calendar-event {
+    font-size: 9.5px !important;
+    padding: 1px 3px !important;
+  }
+
+  /* Ensure section headings and category rows wrap */
+  .wrap-row {
+    flex-wrap: wrap !important;
+    row-gap: 6px;
+  }
+
+  /* Larger tap targets for icon buttons */
+  .tap-target {
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+
+  /* Page header can wrap its action on very narrow screens */
+  .page-header {
+    padding: 12px 14px !important;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 }
